@@ -1,0 +1,7 @@
+# Project-specific ignores (python-langchain)
+python-langchain/.env
+python-langchain/venv/
+python-langchain/__pycache__/
+python-langchain/.env
+venv/
+__pycache__/
