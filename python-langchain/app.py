@@ -1,6 +1,6 @@
-import os
+import os 
 from datetime import datetime
-
+from langchain.agents import create_agent
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
@@ -15,8 +15,9 @@ def calculator(expression: str) -> str:
     """
     try:
         # Disable builtins for basic safety (demo purposes)
-        allowed_names = {"__builtins__": None}
-        result = eval(expression, allowed_names, {})
+        # If your linter/IDE complains, you can use a safer approach:
+        allowed_names = {}
+        result = eval(expression, {"__builtins__": None}, allowed_names)
         return str(result)
     except Exception as e:
         return f"Error: {str(e)}"
@@ -24,26 +25,22 @@ def calculator(expression: str) -> str:
 
 def main():
     load_dotenv()
-
     print("🚀 Starting application...")
 
     # Optional GitHub token (used later for GitHub-hosted models)
     github_token = os.getenv("GITHUB_TOKEN")
-    if github_token:
-        print("GitHub token loaded successfully!")
-    else:
-        print("GitHub token not found (OK for now).")
-
-    # Required OpenAI key
-    openai_key = os.getenv("OPENAI_API_KEY")
-    if not openai_key:
-        print("OPENAI_API_KEY not found!")
+    if not github_token:
+        print("❌ GITHUB_TOKEN not found in environment variables.")
+        print("👉 Please set your GitHub token in a .env file or as an environment variable.")
+        print("   Example .env entry: GITHUB_TOKEN=your_token_here")
         return
 
+    # Initialize ChatOpenAI model using GitHub-hosted endpoint
     llm = ChatOpenAI(
-        model="gpt-4o-mini",
+        model="openai/gpt-4o",
         temperature=0,
-        api_key=openai_key,
+        base_url="https://models.github.ai/inference",
+        api_key=github_token,
     )
 
     print("ChatOpenAI model initialized successfully!")
@@ -61,11 +58,17 @@ def main():
         )
     ]
 
-    # Test query (still no agent yet)
+    # Test query (Prompt 7: Without tools)
     query = "What is 25 * 4 + 10?"
-    response = llm.invoke([HumanMessage(content=query)])
-    print("Response:", response.content)
-
+    try:
+        response = llm.invoke([HumanMessage(content=query)])
+        print("Response:", response.content)
+    except Exception as e:
+        print("❌ Error during model invocation:", str(e))
+        print("👉 Please check that your GITHUB_TOKEN is valid and has access to https://models.github.ai/inference.")
+        print("   If you are using a personal access token, ensure it has the correct scopes.")
+        return
 
 if __name__ == "__main__":
     main()
+
