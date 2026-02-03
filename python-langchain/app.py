@@ -25,7 +25,7 @@ def calculator(expression: str) -> str:
 def main():
     load_dotenv()
 
-    print("Starting application...")
+    print("🚀 Starting application...")
 
     # Optional GitHub token (used later for GitHub-hosted models)
     github_token = os.getenv("GITHUB_TOKEN")
