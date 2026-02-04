@@ -46,20 +46,21 @@ def main():
     print("ChatOpenAI model initialized successfully!")
 
     # Tool list (Prompt 10)
-    tools = [
-        Tool(
-            name="Calculator",
-            func=calculator,
-            description=(
-                "Use this tool to perform mathematical calculations. "
-                "Provide a full math expression as input, such as '25 * 4 + 10'. "
-                "This tool should be used whenever a calculation is required."
-            ),
-        )
-    ]
+    # Commenting out the Calculator tool for Prompt 12
+    # tools = [
+    #     Tool(
+    #         name="Calculator",
+    #         func=calculator,
+    #         description=(
+    #             "Use this tool to perform mathematical calculations. "
+    #             "Provide a full math expression as input, such as '25 * 4 + 10'. "
+    #             "This tool should be used whenever a calculation is required."
+    #         ),
+    #     )
+    # ]
 
-    # Test query (Prompt 7: Without tools)
-    query = "What is 25 * 4 + 10?"
+    # Test query (Prompt 12: Without tool)
+    query = "What time is it right now?"
     try:
         response = llm.invoke([HumanMessage(content=query)])
         print("Response:", response.content)
