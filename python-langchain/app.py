@@ -22,14 +22,7 @@ def calculator(expression: str) -> str:
     except Exception as e:
         return f"Error: {str(e)}"
 
-def get_current_time(_: str) -> str:
-    """
-    Returns the current date and time as a formatted string.
-    Uses datetime.now().strftime("%Y-%m-%d %H:%M:%S").
-    """
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
- 
 def main():
     load_dotenv()
     print("🚀 Starting application...")
