@@ -23,6 +23,16 @@ def calculator(expression: str) -> str:
         return f"Error: {str(e)}"
 
 
+
+def get_current_time(_: str) -> str:
+    """
+    Returns the current date and time as a formatted string.
+    Uses datetime.now().strftime("%Y-%m-%d %H:%M:%S").
+    The input parameter is required for LangChain Tool interface compatibility.
+    """
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
 def main():
     load_dotenv()
     print("🚀 Starting application...")
@@ -45,19 +55,26 @@ def main():
 
     print("ChatOpenAI model initialized successfully!")
 
-    # Tool list (Prompt 10)
-    # Commenting out the Calculator tool for Prompt 12
-    # tools = [
-    #     Tool(
-    #         name="Calculator",
-    #         func=calculator,
-    #         description=(
-    #             "Use this tool to perform mathematical calculations. "
-    #             "Provide a full math expression as input, such as '25 * 4 + 10'. "
-    #             "This tool should be used whenever a calculation is required."
-    #         ),
-    #     )
-    # ]
+       # Tool list (Prompt 14)
+    tools = [
+        Tool(
+            name="Calculator",
+            func=calculator,
+            description=(
+                "Use this tool to perform mathematical calculations. "
+                "Provide a full math expression as input, such as '25 * 4 + 10'. "
+                "This tool should be used whenever a calculation is required."
+            ),
+        ),
+        Tool(
+            name="get_current_time",
+            func=get_current_time,
+            description=(
+                "Returns the current date and time as a formatted string (YYYY-MM-DD HH:MM:SS). "
+                "Use this tool whenever you need to know the current time."
+            ),
+        ),
+    ]
 
     # Test query (Prompt 12: Without tool)
     query = "What time is it right now?"
