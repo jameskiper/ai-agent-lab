@@ -6,7 +6,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 from langchain_core.tools import Tool
 
-
+#from langchain.agents import create_agent#
 def calculator(expression: str) -> str:
     """
     Evaluates a mathematical expression provided as a string.
@@ -55,7 +55,7 @@ def main():
 
     print("ChatOpenAI model initialized successfully!")
 
-       # Tool list (Prompt 14)
+    # Tool list (Prompt 14)
     tools = [
         Tool(
             name="Calculator",
@@ -75,12 +75,17 @@ def main():
             ),
         ),
     ]
-
-    # Test query (Prompt 12: Without tool)
+    # Test the get_current_time tool directly
+    print("Testing get_current_time tool:", get_current_time("test")) 
+    # Create an agent that can use the tools (Prompt 14)
+    agent = create_agent(llm, tools)
+    # Test query (Prompt 14: With tool)
     query = "What time is it right now?"
+    
+    
     try:
-        response = llm.invoke([HumanMessage(content=query)])
-        print("Response:", response.content)
+        result = agent.invoke({"input": query})
+        print("Response:", result)
     except Exception as e:
         print("❌ Error during model invocation:", str(e))
         print("👉 Please check that your GITHUB_TOKEN is valid and has access to https://models.github.ai/inference.")
