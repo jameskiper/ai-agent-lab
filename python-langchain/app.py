@@ -60,6 +60,23 @@ def reverse_string(input_string: str) -> str:
   """
   return input_string[::-1]
 
+@tool
+def get_weather(date: str) -> str:
+  """
+  Returns weather information for a given date.
+  Accepts a date parameter in the format "YYYY-MM-DD".
+  Returns "Sunny, 72°F" if the date matches today's date.
+  Returns "Rainy, 55°F" for all other dates.
+  """
+  try:
+    today = datetime.now().strftime("%Y-%m-%d")
+    if date == today:
+      return "Sunny, 72°F"
+    else:
+      return "Rainy, 55°F"
+  except Exception as e:
+    return f"Error: {str(e)}"
+
 def main():
   load_dotenv()
   print(" Starting application...")
@@ -84,7 +101,7 @@ def main():
   print("ChatOpenAI model initialized successfully!")
 
   # Tool list (Prompt 14)
-  tools = [get_current_time, calculator, reverse_string]
+  tools = [get_current_time, calculator, reverse_string, get_weather]
 
   # Test the get_current_time tool directly
   print("Testing get_current_time tool:", get_current_time.invoke({}))
@@ -93,14 +110,17 @@ def main():
   agent = create_agent(
     model=llm,
     tools=tools,
-    system_prompt="You are a professional and succinct assistant. Use the available tools to answer questions concisely and accurately."
+    system_prompt="You are a professional and succinct assistant. Use the available tools to answer questions concisely and accurately. If a query requires multiple steps, use the tools in combination to provide a complete and accurate response."
   )
 
   # Test queries (Prompt 18)
   queries = [
     "What time is it right now?",
     "What is 25 * 4 + 10?",
-    "Reverse the string 'Hello World'"
+    "Reverse the string 'Hello World'",
+    "What is the weather on 2026-02-06?",
+    "What is the weather on 2026-02-05?",
+    "What's the weather like today?"
   ]
 
   print("Running example queries:\n")
