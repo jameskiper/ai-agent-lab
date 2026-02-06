@@ -5,25 +5,29 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 
-@tool
-def calculator(expression: str) -> str:
-  """
-  Evaluates a mathematical expression provided as a string.
-  Uses Python's eval() for demonstration purposes ONLY.
-  Returns the result as a string or an error message.
-  """
-  try:
-    # Disable builtins for basic safety (demo purposes)
-    # If your linter/IDE complains, you can use a safer approach:
-    allowed_names = {}
-    result = eval(expression, {"__builtins__": None}, allowed_names)
-    return str(result)
-  except Exception as e:
-    return f"Error: {str(e)}"
+# @tool
+# def calculator(expression: str) -> str:
+#   """
+#   Evaluates a mathematical expression provided as a string.
+#   Uses Python's eval() for demonstration purposes ONLY.
+#   Returns the result as a string or an error message.
+#   """
+#   try:
+#     # Disable builtins for basic safety (demo purposes)
+#     # If your linter/IDE complains, you can use a safer approach:
+#     allowed_names = {}
+#     result = eval(expression, {"__builtins__": None}, allowed_names)
+#     return str(result)
+#   except Exception as e:
+#     return f"Error: {str(e)}"
 
-
-
-
+# @tool
+# def get_current_time() -> str:
+#   """
+#   Returns the current date and time as a formatted string.
+#   Uses datetime.now().strftime("%Y-%m-%d %H:%M:%S").
+#   """
+#   return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 @tool
 def get_current_time() -> str:
@@ -59,7 +63,7 @@ def main():
   print("ChatOpenAI model initialized successfully!")
 
   # Tool list (Prompt 14)
-  tools = [calculator, get_current_time]
+  tools = [get_current_time]
   
   # Test the get_current_time tool directly
   print("Testing get_current_time tool:", get_current_time.invoke({}))
@@ -71,10 +75,8 @@ def main():
     system_prompt="You are a helpful assistant. Use the available tools to answer questions."
   )
   
-  # Test query (Prompt 14: With tool)
-  query = "What time is it right now?"
-
-
+  # Test query (Prompt 15: Without tool)
+  query = "Reverse the string 'Hello World'"
 
   try:
     result = agent.invoke({"messages": [{"role": "user", "content": query}]})
