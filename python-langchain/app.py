@@ -64,30 +64,36 @@ def main():
 
   # Tool list (Prompt 14)
   tools = [get_current_time]
-  
+
   # Test the get_current_time tool directly
   print("Testing get_current_time tool:", get_current_time.invoke({}))
-  
+
   # Create an agent that can use the tools (Prompt 14)
   agent = create_agent(
     model=llm,
     tools=tools,
     system_prompt="You are a helpful assistant. Use the available tools to answer questions."
   )
-  
-  # Test query (Prompt 15: Without tool)
-  query = "Reverse the string 'Hello World'"
 
-  try:
-    result = agent.invoke({"messages": [{"role": "user", "content": query}]})
-    # Extract the final AI response from the messages
-    final_response = result["messages"][-1].content
-    print("Response:", final_response)
-  except Exception as e:
-    print(" Error during model invocation:", str(e))
-    print(" Please check that your GITHUB_TOKEN is valid and has access to https://models.github.ai/inference.")
-    print("   If you are using a personal access token, ensure it has the correct scopes.")
-    return
+  # Test queries (Prompt 18)
+  queries = [
+    "What time is it right now?",
+    "What is 25 * 4 + 10?",
+    "Reverse the string 'Hello World'"
+  ]
+
+  print("Running example queries:\n")
+  for query in queries:
+    print(f"📝 Query: {query}\n")
+    print("─" * 50)
+    try:
+      result = agent.invoke({"messages": [{"role": "user", "content": query}]})
+      final_response = result["messages"][-1].content
+      print(f"✅ Response: {final_response}\n")
+    except Exception as e:
+      print(f"❌ Error: {str(e)}\n")
+
+  print("🎉 Agent demo complete!")
 
 if __name__ == "__main__":
   main()
