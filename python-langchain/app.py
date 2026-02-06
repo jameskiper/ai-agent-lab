@@ -30,6 +30,22 @@ from langchain_core.tools import tool
 #   return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 @tool
+def calculator(expression: str) -> str:
+  """
+  Evaluates a mathematical expression provided as a string.
+  Uses Python's eval() for demonstration purposes ONLY.
+  Returns the result as a string or an error message.
+  """
+  try:
+    # Disable builtins for basic safety (demo purposes)
+    # If your linter/IDE complains, you can use a safer approach:
+    allowed_names = {}
+    result = eval(expression, {"__builtins__": None}, allowed_names)
+    return str(result)
+  except Exception as e:
+    return f"Error: {str(e)}"
+
+@tool
 def get_current_time() -> str:
   """
   Returns the current date and time as a formatted string.
@@ -37,7 +53,12 @@ def get_current_time() -> str:
   """
   return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-
+@tool
+def reverse_string(input_string: str) -> str:
+  """
+  Reverses the given string and returns the reversed result.
+  """
+  return input_string[::-1]
 
 def main():
   load_dotenv()
@@ -63,7 +84,7 @@ def main():
   print("ChatOpenAI model initialized successfully!")
 
   # Tool list (Prompt 14)
-  tools = [get_current_time]
+  tools = [get_current_time, calculator, reverse_string]
 
   # Test the get_current_time tool directly
   print("Testing get_current_time tool:", get_current_time.invoke({}))
@@ -72,7 +93,7 @@ def main():
   agent = create_agent(
     model=llm,
     tools=tools,
-    system_prompt="You are a helpful assistant. Use the available tools to answer questions."
+    system_prompt="You are a professional and succinct assistant. Use the available tools to answer questions concisely and accurately."
   )
 
   # Test queries (Prompt 18)
